@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <script src="http://localhost:8080/socket.io/socket.io.js"></script>
+  <body>
+    <div>哈哈</div>
+
+    <script>
+      var socket = io("http://localhost:8080");
+      socket.on("send", function (data) {
+        console.log(data);
+      });
+      socket.emit("hehe", { name: "zs", age: 18 });
+    </script>
+  </body>
+</html>

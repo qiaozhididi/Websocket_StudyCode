@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>简单聊天室</title>
+  </head>
+  <style>
+    /* div {
+      width: 100px;
+      height: 100px;
+      border: 1px #000 solid;
+    } */
+  </style>
+  <body>
+    <!-- 输入内容   -->
+    <input type="text" placeholder="请输入内容" />
+
+    <!-- 触发发送请求事件 -->
+    <button>发送请求</button>
+
+    <!-- 显示结果 -->
+    <div></div>
+
+    <script>
+      var input = document.querySelector("input");
+      var button = document.querySelector("button");
+      var div = document.querySelector("div");
+      const TYPE_ENTER = 0;
+      const TYPE_LEAVE = 1;
+      const TYPE_MSG = 2;
+      // 演示webSocket的使用
+      // H5自带webSocket Api
+
+      //1.创建webSocket
+      // 参数1：webSocket服务地址
+      var Socket = new WebSocket("ws://localhost:3333");
+
+      //2.open 当和webSocket连接成功是触发
+      Socket.addEventListener("open", function () {
+        div.innerHTML = "服务连接成功";
+      });
+
+      // 3. 主动给webSocket服务发送信息
+      button.addEventListener("click", function () {
+        var value = input.value;
+        Socket.send(value);
+        input.value = "";
+      });
+
+      // 4. 接收webSocket服务的数据
+      Socket.addEventListener("message", function (e) {
+        console.log(e.data);
+        var data = JSON.parse(e.data);
+        var dv = document.createElement("div");
+        dv.innerText = data.msg + "----" + data.time;
+        if (data.type === TYPE_ENTER) {
+          dv.style.color = 'green';
+        } else if (data.type === TYPE_LEAVE) {
+          dv.style.color = 'red';
+        } else if (data.type === TYPE_MSG) {
+            dv.style.color = 'black';
+        }
+        div.appendChild(dv);
+      });
+
+      // 5. 断开webSocket连接
+      Socket.addEventListener("close", function () {
+        div.innerHTML = "服务断开连接";
+      });
+    </script>
+  </body>
+</html>
